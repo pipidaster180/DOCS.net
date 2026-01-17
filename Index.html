@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shadow Market | Operation Vasilina</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', monospace;
+        }
+
+        body {
+            background-color: #0a0a0a;
+            color: #c0c0c0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(120, 119, 198, 0.05) 0%, rgba(255, 255, 255, 0) 25%),
+                radial-gradient(circle at 85% 30%, rgba(10, 10, 10, 0.7) 0%, rgba(255, 255, 255, 0) 50%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid #222;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            color: #5d00ff;
+            font-size: 28px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            background: linear-gradient(90deg, #5d00ff, #ff0055);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(93, 0, 255, 0.3);
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 16px;
+            transition: color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav a:hover {
+            color: #ff0055;
+        }
+
+        .nav a.active {
+            color: #5d00ff;
+            border-bottom: 2px solid #5d00ff;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .balance {
+            background-color: rgba(93, 0, 255, 0.2);
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #5d00ff;
+            font-weight: bold;
+            color: #5d00ff;
+        }
+
+        .user-icon {
+            color: #00cc88;
+            font-size: 18px;
+        }
+
+        /* Main Content */
+        .hero {
+            text-align: center;
+            padding: 40px 0;
+            margin-bottom: 50px;
+            border-bottom: 1px solid #222;
+        }
+
+        .hero h1 {
+            font-size: 36px;
+            margin-bottom: 15px;
+            color: #e0e0e0;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+            color: #aaa;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #333;
+            margin-bottom: 30px;
+            gap: 10px;
+        }
+
+        .tab {
+            padding: 15px 30px;
+            background-color: rgba(30, 30, 40, 0.7);
+            border: 1px solid #333;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            color: #aaa;
+        }
+
+        .tab:hover {
+            background-color: rgba(93, 0, 255, 0.1);
+            color: #5d00ff;
+        }
+
+        .tab.active {
+            background-color: rgba(93, 0, 255, 0.2);
+            color: #5d00ff;
+            border-color: #5d00ff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Operation Status */
+        .operation-status {
+            background-color: rgba(30, 0, 10, 0.7);
+            border: 1px solid #ff0055;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 40px;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.2);
+        }
+
+        .status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .status-title {
+            font-size: 22px;
+            color: #ff0055;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-timer {
+            font-size: 18px;
+            color: #00ffaa;
+            font-weight: bold;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 8px 15px;
+            border-radius: 4px;
+            border: 1px solid #00ffaa;
+        }
+
+        .status-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .status-item {
+            background-color: rgba(20, 0, 10, 0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid #ff0055;
+        }
+
+        .status-label {
+            color: #aaa;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .status-value {
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .action-card {
+            background-color: rgba(20, 20, 30, 0.7);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s, border-color 0.3s;
+            text-align: center;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            border-color: #5d00ff;
+        }
+
+        .action-icon {
+            font-size: 40px;
+            margin-bottom: 20px;
+            color: #5d00ff;
+        }
+
+        .action-title {
+            font-size: 20px;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+        }
+
+        .action-desc {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .action-btn {
+            background-color: #5d00ff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        .action-btn:hover {
+            background-color: #4500cc;
+        }
+
+        .action-btn.red {
+            background-color: #ff0055;
+        }
+
+        .action-btn.red:hover {
+            background-color: #cc0044;
+        }
+
+        .action-btn.green {
+            background-color: #00cc88;
+        }
+
+        .action-btn.green:hover {
+            background-color: #009966;
+        }
+
+        /* Shop Section */
+        .shop {
+            margin-bottom: 60px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 30px;
+            color: #e0e0e0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .shop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .product-card {
+            background-color: rgba(20, 20, 30, 0.7);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 25px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            border-color: #5d00ff;
+        }
+
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .product-name {
+            font-size: 18px;
+            color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .product-price {
+            color: #00cc88;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .product-rating {
+            color: #ffaa00;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .product-desc {
+            color: #aaa;
+            font-size: 14px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .product-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .product-stats {
+            font-size: 12px;
+            color: #777;
+        }
+
+        .buy-btn {
+            background-color: #5d00ff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .buy-btn:hover {
+            background-color: #4500cc;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .stat-item {
+            background-color: rgba(20, 20, 30, 0.7);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(255, 0, 85, 0.2);
+            border-color: #ff0055;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff0055;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: #aaa;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Terminal */
+        .terminal {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 450px;
+            background-color: rgba(0, 0, 0, 0.95);
+            border: 1px solid #ff0055;
+            border-radius: 5px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #00ffaa;
+            max-height: 350px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.3);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            color: #ff8888;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .close-terminal {
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close-terminal:hover {
+            color: #fff;
+        }
+
+        .terminal-line {
+            margin-bottom: 5px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .terminal-line.success {
+            color: #00ffaa;
+        }
+
+        .terminal-line.error {
+            color: #ff5555;
+        }
+
+        .terminal-line.warning {
+            color: #ffaa00;
+        }
+
+        .terminal-line.info {
+            color: #55aaff;
+        }
+
+        .terminal-line.system {
+            color: #5d00ff;
+            font-weight: bold;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+
+        .modal-content {
+            background-color: #0a0a0a;
+            border: 1px solid #5d00ff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            color: #5d00ff;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            color: #aaa;
+            cursor: pointer;
+        }
+
+        .modal-close:hover {
+            color: #fff;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 0;
+            border-top: 1px solid #222;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .shop-grid {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 28px;
+            }
+            
+            .terminal {
+                width: 90%;
+                right: 5%;
+                left: 5%;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+            
+            .tab {
+                flex: 1;
+                text-align: center;
+                padding: 10px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <i class="fas fa-skull-crossbones logo-icon"></i>
+                <span class="logo-text">SHADOW MARKET</span>
+            </div>
+            
+            <nav class="nav">
+                <a href="#" class="nav-link active" data-tab="dashboard"><i class="fas fa-home"></i> Дашборд</a>
+                <a href="#" class="nav-link" data-tab="shop"><i class="fas fa-shopping-cart"></i> Магазин</a>
+                <a href="#" class="nav-link" data-tab="tools"><i class="fas fa-tools"></i> Инструменты</a>
+                <a href="#" class="nav-link" data-tab="operation"><i class="fas fa-crosshairs"></i> Операция</a>
+                <a href="#" class="nav-link" data-tab="profile"><i class="fas fa-user-secret"></i> Профиль</a>
+            </nav>
+            
+            <div class="user-info">
+                <div class="balance">
+                    <i class="fas fa-coins"></i> <span id="userBalance">12,450</span> BTC
+                </div>
+                <i class="fas fa-user-ninja user-icon"></i>
+                <span>Доксер_Аноним</span>
+            </div>
+        </header>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" data-tab="dashboard">Дашборд</div>
+            <div class="tab" data-tab="shop">Магазин</div>
+            <div class="tab" data-tab="tools">Инструменты</div>
+            <div class="tab" data-tab="operation">Операция</div>
+            <div class="tab" data-tab="profile">Профиль</div>
+        </div>
+
+        <!-- Dashboard Tab -->
+        <div class="tab-content active" id="dashboard-tab">
+            <!-- Hero Section -->
+            <section class="hero">
+                <h1>ОПЕРАЦИЯ "ВАСИЛИНА"</h1>
+                <p>Сегодня братья доксеры на нас думают что мы ничего не можем и мы докажем обратное. Некая Василина Рязанова Васильевна 13 лет пиздючка как она говорила "Доксеры не на что не способны". Мы будем проводить атаку 18 в 00:00 на нее бомбер атаку и мы сможем найти больше информации чем она думает.</p>
+            </section>
+
+            <!-- Operation Status -->
+            <section class="operation-status">
+                <div class="status-header">
+                    <div class="status-title">
+                        <i class="fas fa-clock"></i>
+                        <span>СТАТУС ОПЕРАЦИИ</span>
+                    </div>
+                    <div class="status-timer" id="countdown">23:45:12</div>
+                </div>
+                
+                <div class="status-details">
+                    <div class="status-item">
+                        <div class="status-label">ЦЕЛЬ</div>
+                        <div class="status-value">Василина Рязанова</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">ВОЗРАСТ</div>
+                        <div class="status-value">13 лет</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">ДАТА АТАКИ</div>
+                        <div class="status-value">18 числа, 00:00</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">ТИП АТАКИ</div>
+                        <div class="status-value">Бомбер + Инфо-сбор</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-bomb"></i>
+                    </div>
+                    <div class="action-title">Бомбер Атака</div>
+                    <div class="action-desc">Запустить SMS/Email бомбер атаку на цель. Отправит тысячи сообщений за короткое время.</div>
+                    <button class="action-btn red" id="startBomber">
+                        <i class="fas fa-rocket"></i> Запустить Бомбер
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="action-title">Сбор Информации</div>
+                    <div class="action-desc">Начать автоматический сбор данных о цели из всех доступных источников.</div>
+                    <button class="action-btn" id="startInfoGathering">
+                        <i class="fas fa-database"></i> Собрать Данные
+                    </button>
+                </div>
+
+                <div class="action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="action-title">Анонимизация</div>
+                    <div class="action-desc">Активировать полную систему анонимизации для всех участников операции.</div>
+                    <button class="action-btn green" id="startAnonymization">
+                        <i class="fas fa-user-secret"></i> Включить Скрытность
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <section class="stats">
+                <div class="stat-item">
+                    <div class="stat-number" id="participants">47</div>
+                    <div class="stat-label">Доксеров в операции</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="tools-active">8/12</div>
+                    <div class="stat-label">Инструментов активно</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="data-collected">64%</div>
+                    <div class="stat-label">Данных собрано</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="success-chance">92%</div>
+                    <div class="stat-label">Шанс успеха</div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Shop Tab -->
+        <div class="tab-content" id="shop-tab">
+            <section class="shop">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>ТЕМНЫЙ МАРКЕТ</span>
+                </h2>
+                
+                <div class="shop-grid" id="shopGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Tools Tab -->
+        <div class="tab-content" id="tools-tab">
+            <section class="shop">
+                <h2 class="section-title">
+                    <i class="fas fa-tools"></i>
+                    <span>ИНСТРУМЕНТЫ И УТИЛИТЫ</span>
+                </h2>
+                
+                <div class="shop-grid" id="toolsGrid">
+                    <!-- Tools will be loaded here -->
+                </div>
+            </section>
+        </div>
+
+        <!-- Operation Tab -->
+        <div class="tab-content" id="operation-tab">
+            <section class="operation-status">
+                <div class="status-header">
+                    <div class="status-title">
+                        <i class="fas fa-crosshairs"></i>
+                        <span>ДЕТАЛИ ОПЕРАЦИИ "ВАСИЛИНА"</span>
+                    </div>
+                    <div class="status-timer" id="countdown2">23:45:12</div>
+                </div>
+                
+                <div class="action-buttons">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="action-title">Пригласить Доксеров</div>
+                        <div class="action-desc">Отправить приглашения другим доксерам для участия в операции.</div>
+                        <button class="action-btn" id="inviteDoxers">
+                            <i class="fas fa-user-plus"></i> Пригласить
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="action-title">Создать Отчет</div>
+                        <div class="action-desc">Сгенерировать детальный отчет о ходе операции и собранных данных.</div>
+                        <button class="action-btn" id="generateReport">
+                            <i class="fas fa-chart-bar"></i> Создать Отчет
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-skull-crossbones"></i>
+                        </div>
+                        <div class="action-title">Эскалация Атаки</div>
+                        <div class="action-desc">Перейти к более агрессивным методам атаки и давления на цель.</div>
+                        <button class="action-btn red" id="escalateAttack">
+                            <i class="fas fa-fire"></i> Эскалировать
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Profile Tab -->
+        <div class="tab-content" id="profile-tab">
+            <section class="shop">
+                <h2 class="section-title">
+                    <i class="fas fa-user-secret"></i>
+                    <span>ПРОФИЛЬ ДОКСЕРА</span>
+                </h2>
+                
+                <div class="action-buttons">
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="action-title">Пополнить Баланс</div>
+                        <div class="action-desc">Добавить Bitcoin на ваш счет для покупки инструментов и услуг.</div>
+                        <button class="action-btn green" id="addBalance">
+                            <i class="fas fa-plus-circle"></i> Пополнить
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div class="action-title">История Операций</div>
+                        <div class="action-desc">Просмотреть историю всех ваших действий и покупок.</div>
+                        <button class="action-btn" id="viewHistory">
+                            <i class="fas fa-scroll"></i> Показать Историю
+                        </button>
+                    </div>
+
+                    <div class="action-card">
+                        <div class="action-icon">
+                            <i class="fas fa-cogs"></i>
+                        </div>
+                        <div class="action-title">Настройки Безопасности</div>
+                        <div class="action-desc">Настроить параметры безопасности и анонимности вашего аккаунта.</div>
+                        <button class="action-btn" id="securitySettings">
+                            <i class="fas fa-shield-alt"></i> Настройки
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Shadow Market &copy; 2023. Только для участников группы "Доксеры".</p>
+            <p>Все коммуникации защищены сквозным шифрованием. Данные будут уничтожены после завершения операции.</p>
+        </footer>
+    </div>
+
+    <!-- Terminal -->
+    <div class="terminal" id="terminal">
+        <div class="terminal-header">
+            <span>shadow_market_terminal.exe</span>
+            <span class="close-terminal" id="closeTerminal">ЗАКРЫТЬ [X]</span>
+        </div>
+        <div id="terminalContent">
+            <div class="terminal-line system">> Shadow Market Terminal v2.4</div>
+            <div class="terminal-line info">> Добро пожаловать, Доксер_Аноним</div>
+            <div class="terminal-line info">> Баланс: 12,450 BTC</div>
+            <div class="terminal-line info">> Статус: Операция "Василина" активна</div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal" id="buyModal">
+        <div class="modal-content">
+            <div class="modal-close" id="closeModal">&times;</div>
+            <div class="modal-title">
+                <i class="fas fa-shopping-cart"></i>
+                <span>ПОДТВЕРЖДЕНИЕ ПОКУПКИ</span>
+            </div>
+            <div id="modalProductDetails">
+                <!-- Product details will be loaded here -->
+            </div>
+            <div style="margin-top: 20px;">
+                <button class="action-btn" id="confirmBuy">Подтвердить покупку</button>
+                <button class="action-btn red" id="cancelBuy" style="margin-top: 10px; background-color: #333;">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="resultModal">
+        <div class="modal-content">
+            <div class="modal-close" id="closeResultModal">&times;</div>
+            <div class="modal-title">
+                <i class="fas fa-check-circle"></i>
+                <span>РЕЗУЛЬТАТ ОПЕРАЦИИ</span>
+            </div>
+            <div id="modalResultDetails">
+                <!-- Result details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elements
+            const terminal = document.getElementById('terminal');
+            const closeTerminal = document.getElementById('closeTerminal');
+            const terminalContent = document.getElementById('terminalContent');
+            const buyModal = document.getElementById('buyModal');
+            const resultModal = document.getElementById('resultModal');
+            const closeModal = document.getElementById('closeModal');
+            const closeResultModal = document.getElementById('closeResultModal');
+            const cancelBuy = document.getElementById('cancelBuy');
+            const confirmBuy = document.getElementById('confirmBuy');
+            const userBalanceElement = document.getElementById('userBalance');
+            
+            // User data
+            let userBalance = 12450; // BTC in satoshis
+            let purchasedProducts = [];
+            let operationActive = true;
+            
+            // Show terminal automatically
+            setTimeout(() => {
+                terminal.style.display = 'block';
+            }, 1000);
+            
+            // Countdown timer
+            const countdownElement = document.getElementById('countdown');
+            const countdownElement2 = document.getElementById('countdown2');
+            const attackDate = new Date();
+            attackDate.setDate(18);
+            attackDate.setHours(0, 0, 0, 0);
+            
+            function updateCountdown() {
+                const now = new Date();
+                const diff = attackDate - now;
+                
+                if (diff <= 0) {
+                    countdownElement.textContent = "АТАКА НАЧАЛАСЬ!";
+                    countdownElement.style.color = "#ff0055";
+                    countdownElement2.textContent = "АТАКА НАЧАЛАСЬ!";
+                    countdownElement2.style.color = "#ff0055";
+                    return;
+                }
+                
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                
+                const timeString = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                countdownElement.textContent = timeString;
+                countdownElement2.textContent = timeString;
+            }
+            
+            setInterval(updateCountdown, 1000);
+            updateCountdown();
+            
+            // Tab switching
+            const tabs = document.querySelectorAll('.tab');
+            const navLinks = document.querySelectorAll('.nav-link');
+            const tabContents = document.querySelectorAll('.tab-content');
+            
+            function switchTab(tabId) {
+                // Update tabs
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.dataset.tab === tabId) {
+                        tab.classList.add('active');
+                    }
+                });
+                
+                // Update nav links
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.dataset.tab === tabId) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                // Update tab contents
+                tabContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === `${tabId}-tab`) {
+                        content.classList.add('active');
+                    }
+                });
+                
+                // Load content for specific tabs
+                if (tabId === 'shop') {
+                    loadShopProducts();
+                } else if (tabId === 'tools') {
+                    loadTools();
+                }
+            }
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    switchTab(tab.dataset.tab);
+                });
+            });
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    switchTab(link.dataset.tab);
+                });
+            });
+            
+            // Close terminal
+            closeTerminal.addEventListener('click', function() {
+                terminal.style.display = 'none';
+            });
+            
+            // Close modals
+            closeModal.addEventListener('click', function() {
+                buyModal.style.display = 'none';
+            });
+            
+            closeResultModal.addEventListener('click', function() {
+                resultModal.style.display = 'none';
+            });
+            
+            cancelBuy.addEventListener('click', function() {
+                buyModal.style.display = 'none';
+            });
+            
+            // Add terminal line function
+            function addTerminalLine(message, type = "info") {
+                const line = document.createElement('div');
+                line.className = `terminal-line ${type}`;
+                line.textContent = message;
+                terminalContent.appendChild(line);
+                terminal.scrollTop = terminal.scrollHeight;
+            }
+            
+            // Shop products data
+            const shopProducts = [
+                {
+                    id: 1,
+                    name: "SMS Bomber Pro",
+                    icon: "fas fa-bomb",
+                    price: 450,
+                    rating: 4.8,
+                    description: "Профессиональный инструмент для массовой отправки SMS. Поддерживает все операторы РФ, автоматическая смена отправителей.",
+                    stats: "Продано: 1,247 | Обновлено: 2 дня назад"
+                },
+                {
+                    id: 2,
+                    name: "Info Gather X",
+                    icon: "fas fa-search",
+                    price: 320,
+                    rating: 4.9,
+                    description: "Мощный сборщик информации из социальных сетей, мессенджеров и публичных баз данных.",
+                    stats: "Продано: 892 | Обновлено: 1 неделю назад"
+                },
+                {
+                    id: 3,
+                    name: "Stealth VPN",
+                    icon: "fas fa-user-secret",
+                    price: 150,
+                    rating: 4.7,
+                    description: "VPN с полным отсутствием логов, 5000+ серверов в 80 странах. Пожизненный доступ.",
+                    stats: "Продано: 3,541 | Обновлено: сегодня"
+                },
+                {
+                    id: 4,
+                    name: "DDoS Attack Suite",
+                    icon: "fas fa-network-wired",
+                    price: 780,
+                    rating: 4.6,
+                    description: "Полный набор для организации DDoS атак. Включает ботнет из 10,000 устройств.",
+                    stats: "Продано: 311 | Обновлено: 3 дня назад"
+                },
+                {
+                    id: 5,
+                    name: "Password Cracker Elite",
+                    icon: "fas fa-key",
+                    price: 550,
+                    rating: 4.5,
+                    description: "Программа для подбора паролей с поддержкой GPU ускорения и словарями на 10 млн. комбинаций.",
+                    stats: "Продано: 647 | Обновлено: 1 месяц назад"
+                },
+                {
+                    id: 6,
+                    name: "Full Anonymity Kit",
+                    icon: "fas fa-mask",
+                    price: 920,
+                    rating: 4.9,
+                    description: "Полный комплект для абсолютной анонимности в сети. Включает TOR, прокси, шифрование.",
+                    stats: "Продано: 412 | Обновлено: 2 недели назад"
+                }
+            ];
+            
+            // Tools data
+            const toolsData = [
+                {
+                    id: 101,
+                    name: "IP Tracker",
+                    icon: "fas fa-map-marker-alt",
+                    price: 0,
+                    rating: 4.8,
+                    description: "Бесплатный инструмент для отслеживания IP адресов и определения местоположения.",
+                    stats: "Бесплатно | Использовано: 5,247 раз"
+                },
+                {
+                    id: 102,
+                    name: "Phone Number Analyzer",
+                    icon: "fas fa-phone",
+                    price: 0,
+                    rating: 4.5,
+                    description: "Анализ телефонных номеров, определение оператора и региона.",
+                    stats: "Бесплатно | Использовано: 3,892 раз"
+                },
+                {
+                    id: 103,
+                    name: "Email Validator",
+                    icon: "fas fa-envelope",
+                    price: 0,
+                    rating: 4.3,
+                    description: "Проверка существования email адресов и поиск связанных аккаунтов.",
+                    stats: "Бесплатно | Использовано: 2,541 раз"
+                },
+                {
+                    id: 104,
+                    name: "Social Media Scanner",
+                    icon: "fas fa-users",
+                    price: 50,
+                    rating: 4.7,
+                    description: "Поиск профилей в социальных сетях по имени, фото или другим данным.",
+                    stats: "Цена: 50 BTC | Использовано: 1,847 раз"
+                },
+                {
+                    id: 105,
+                    name: "Data Breach Checker",
+                    icon: "fas fa-database",
+                    price: 30,
+                    rating: 4.6,
+                    description: "Проверка наличия данных в утечках и базах данных.",
+                    stats: "Цена: 30 BTC | Использовано: 3,112 раз"
+                },
+                {
+                    id: 106,
+                    name: "Encryption Tool",
+                    icon: "fas fa-lock",
+                    price: 0,
+                    rating: 4.9,
+                    description: "Шифрование и дешифрование сообщений с использованием AES-256.",
+                    stats: "Бесплатно | Использовано: 7,245 раз"
+                }
+            ];
+            
+            // Load shop products
+            function loadShopProducts() {
+                const shopGrid = document.getElementById('shopGrid');
+                shopGrid.innerHTML = '';
+                
+                shopProducts.forEach(product => {
+                    const productCard = document.createElement('div');
+                    productCard.className = 'product-card';
+                    productCard.dataset.id = product.id;
+                    
+                    const isPurchased = purchasedProducts.includes(product.id);
+                    
+                    productCard.innerHTML = `
+                        <div class="product-header">
+                            <div class="product-name">
+                                <i class="${product.icon}"></i>
+                                <span>${product.name}</span>
+                            </div>
+                            <div class="product-price">${product.price} BTC</div>
+                        </div>
+                        <div class="product-rating">
+                            ${'<i class="fas fa-star"></i>'.repeat(Math.floor(product.rating))}
+                            ${product.rating % 1 !== 0 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                            <span>(${product.rating})</span>
+                        </div>
+                        <div class="product-desc">${product.description}</div>
+                        <div class="product-footer">
+                            <div class="product-stats">${product.stats}</div>
+                            <button class="buy-btn" ${isPurchased ? 'disabled style="background-color: #333;"' : ''}>
+                                ${isPurchased ? '<i class="fas fa-check"></i> Куплено' : '<i class="fas fa-shopping-cart"></i> Купить'}
+                            </button>
+                        </div>
+                    `;
+                    
+                    shopGrid.appendChild(productCard);
+                    
+                    // Add event listener to buy button
+                    const buyBtn = productCard.querySelector('.buy-btn');
+                    if (!isPurchased) {
+                        buyBtn.addEventListener('click', () => {
+                            showBuyModal(product);
+                        });
+                    }
+                });
+            }
+            
+            // Load tools
+            function loadTools() {
+                const toolsGrid = document.getElementById('toolsGrid');
+                toolsGrid.innerHTML = '';
+                
+                toolsData.forEach(tool => {
+                    const toolCard = document.createElement('div');
+                    toolCard.className = 'product-card';
+                    toolCard.dataset.id = tool.id;
+                    
+                    toolCard.innerHTML = `
+                        <div class="product-header">
+                            <div class="product-name">
+                                <i class="${tool.icon}"></i>
+                                <span>${tool.name}</span>
+                            </div>
+                            <div class="product-price">${tool.price === 0 ? 'БЕСПЛАТНО' : tool.price + ' BTC'}</div>
+                        </div>
+                        <div class="product-rating">
+                            ${'<i class="fas fa-star"></i>'.repeat(Math.floor(tool.rating))}
+                            ${tool.rating % 1 !== 0 ? '<i class="fas fa-star-half-alt"></i>' : ''}
+                            <span>(${tool.rating})</span>
+                        </div>
+                        <div class="product-desc">${tool.description}</div>
+                        <div class="product-footer">
+                            <div class="product-stats">${tool.stats}</div>
+                            <button class="buy-btn">
+                                <i class="fas fa-play"></i> Использовать
+                            </button>
+                        </div>
+                    `;
+                    
+                    toolsGrid.appendChild(toolCard);
+                    
+                    // Add event listener to use button
+                    const useBtn = toolCard.querySelector('.buy-btn');
+                    useBtn.addEventListener('click', () => {
+                        useTool(tool);
+                    });
+                });
+            }
+            
+            // Show buy modal
+            let selectedProduct = null;
+            
+            function showBuyModal(product) {
+                selectedProduct = product;
+                const modalDetails = document.getElementById('modalProductDetails');
+                
+                modalDetails.innerHTML = `
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
+                            <i class="${product.icon}" style="font-size: 32px; color: #5d00ff;"></i>
+                            <div>
+                                <div style="font-size: 20px; color: #fff; margin-bottom: 5px;">${product.name}</div>
+                                <div style="font-size: 24px; color: #00cc88; font-weight: bold;">${product.price} BTC</div>
+                            </div>
+                        </div>
+                        <div style="color: #aaa; margin-bottom: 15px;">${product.description}</div>
+                        <div style="color: #777; font-size: 14px;">${product.stats}</div>
+                    </div>
+                    <div style="background-color: rgba(93, 0, 255, 0.1); padding: 15px; border-radius: 6px; border: 1px solid #5d00ff;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span>Ваш баланс:</span>
+                            <span style="color: #5d00ff; font-weight: bold;">${userBalance} BTC</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>После покупки:</span>
+                            <span style="color: ${userBalance - product.price >= 0 ? '#00cc88' : '#ff0055'}; font-weight: bold;">
+                                ${userBalance - product.price} BTC
+                            </span>
+                        </div>
+                    </div>
+                `;
+                
+                buyModal.style.display = 'flex';
+            }
+            
+            // Confirm purchase
+            confirmBuy.addEventListener('click', function() {
+                if (!selectedProduct) return;
+                
+                if (userBalance >= selectedProduct.price) {
+                    // Deduct balance
+                    userBalance -= selectedProduct.price;
+                    userBalanceElement.textContent = userBalance.toLocaleString();
+                    
+                    // Add to purchased products
+                    purchasedProducts.push(selectedProduct.id);
+                    
+                    // Show success message
+                    addTerminalLine(`> Покупка "${selectedProduct.name}" успешно завершена!`, "success");
+                    addTerminalLine(`> Списано: ${selectedProduct.price} BTC`, "info");
+                    addTerminalLine(`> Новый баланс: ${userBalance} BTC`, "info");
+                    
+                    // Close modal
+                    buyModal.style.display = 'none';
+                    
+                    // Reload shop to update button
+                    loadShopProducts();
+                    
+                    // Show result modal
+                    showResultModal(`Покупка "${selectedProduct.name}" успешно завершена!`, "success");
+                } else {
+                    addTerminalLine(`> Ошибка: Недостаточно средств для покупки "${selectedProduct.name}"`, "error");
+                    showResultModal(`Ошибка: Недостаточно средств! Нужно еще ${selectedProduct.price - userBalance} BTC`, "error");
+                }
+            });
+            
+            // Use tool function
+            function useTool(tool) {
+                if (tool.price > 0 && userBalance < tool.price) {
+                    addTerminalLine(`> Ошибка: Недостаточно средств для использования "${tool.name}"`, "error");
+                    showResultModal(`Ошибка: Недостаточно средств! Нужно ${tool.price} BTC`, "error");
+                    return;
+                }
+                
+                if (tool.price > 0) {
+                    userBalance -= tool.price;
+                    userBalanceElement.textContent = userBalance.toLocaleString();
+                    addTerminalLine(`> Использование "${tool.name}" - списано ${tool.price} BTC`, "info");
+                }
+                
+                // Simulate tool usage
+                addTerminalLine(`> Запуск "${tool.name}"...`, "info");
+                
+                // Tool-specific actions
+                switch(tool.id) {
+                    case 101: // IP Tracker
+                        setTimeout(() => {
+                            addTerminalLine(`> IP цель: 192.168.1.105`, "success");
+                            addTerminalLine(`> Местоположение: Москва, РФ`, "success");
+                            addTerminalLine(`> Провайдер: Ростелеком`, "success");
+                            showResultModal(`IP трекер успешно выполнен!<br>Цель: 192.168.1.105<br>Местоположение: Москва, РФ`, "success");
+                        }, 1000);
+                        break;
+                    case 102: // Phone Number Analyzer
+                        setTimeout(() => {
+                            addTerminalLine(`> Номер: +7 (926) XXX-XX-XX`, "success");
+                            addTerminalLine(`> Оператор: Мегафон`, "success");
+                            addTerminalLine(`> Регион: Москва и область`, "success");
+                            showResultModal(`Анализ номера успешен!<br>Номер: +7 (926) XXX-XX-XX<br>Оператор: Мегафон`, "success");
+                        }, 1000);
+                        break;
+                    case 104: // Social Media Scanner
+                        setTimeout(() => {
+                            addTerminalLine(`> Найдены профили в: VK, Instagram, Telegram`, "success");
+                            addTerminalLine(`> VK: vasilina_ryazanova_2010`, "success");
+                            addTerminalLine(`> Instagram: vasya_sweet_13`, "success");
+                            showResultModal(`Сканирование соцсетей завершено!<br>Найдено 3 профиля цели`, "success");
+                        }, 1500);
+                        break;
+                    default:
+                        setTimeout(() => {
+                            addTerminalLine(`> Инструмент "${tool.name}" успешно выполнен`, "success");
+                            showResultModal(`Инструмент "${tool.name}" успешно выполнен!`, "success");
+                        }, 1000);
+                }
+            }
+            
+            // Show result modal
+            function showResultModal(message, type = "success") {
+                const modalDetails = document.getElementById('modalResultDetails');
+                const icon = type === "success" ? "fa-check-circle" : "fa-exclamation-circle";
+                const color = type === "success" ? "#00cc88" : "#ff0055";
+                
+                modalDetails.innerHTML = `
+                    <div style="text-align: center; padding: 20px;">
+                        <i class="fas ${icon}" style="font-size: 48px; color: ${color}; margin-bottom: 20px;"></i>
+                        <div style="font-size: 18px; color: #fff; line-height: 1.6;">${message}</div>
+                    </div>
+                `;
+                
+                resultModal.style.display = 'flex';
+                
+                // Auto close after 3 seconds
+                setTimeout(() => {
+                    resultModal.style.display = 'none';
+                }, 3000);
+            }
+            
+            // Action button functionalities
+            
+            // Start Bomber
+            document.getElementById('startBomber').addEventListener('click', function() {
+                if (!operationActive) {
+                    showResultModal("Операция не активна! Дождитесь времени атаки.", "error");
+                    return;
+                }
+                
+                addTerminalLine("> Запуск SMS Bomber...", "warning");
+                addTerminalLine("> Цель: +7 (926) XXX-XX-XX", "info");
+                
+                let messagesSent = 0;
+                const bomberInterval = setInterval(() => {
+                    messagesSent += Math.floor(Math.random() * 5) + 1;
+                    addTerminalLine(`> Отправлено SMS: ${messagesSent}`, "success");
+                    
+                    if (messagesSent >= 50) {
+                        clearInterval(bomberInterval);
+                        addTerminalLine("> Bomber атака завершена успешно!", "success");
+                        showResultModal("Bomber атака выполнена!<br>Отправлено 50+ SMS сообщений.", "success");
+                    }
+                }, 500);
+            });
+            
+            // Start Info Gathering
+            document.getElementById('startInfoGathering').addEventListener('click', function() {
+                addTerminalLine("> Запуск сбора информации...", "info");
+                
+                const infoSteps = [
+                    {delay: 1000, message: "> Сканирование социальных сетей...", type: "info"},
+                    {delay: 2000, message: "> ✓ ВКонтакте: найдено 3 профиля", type: "success"},
+                    {delay: 3000, message: "> ✓ Instagram: найдено 1 профиль", type: "success"},
+                    {delay: 4000, message: "> Поиск контактов...", type: "info"},
+                    {delay: 5000, message: "> ✓ Найдено 2 номера телефона", type: "success"},
+                    {delay: 6000, message: "> Сбор публичных данных...", type: "info"},
+                    {delay: 7000, message: "> ✓ Адрес: Москва, ул. Примерная, д. 13", type: "success"},
+                    {delay: 8000, message: "> ✓ Школа: ГБОУ СОШ № 1234", type: "success"},
+                    {delay: 9000, message: "> Сбор информации завершен!", type: "success"}
+                ];
+                
+                infoSteps.forEach(step => {
+                    setTimeout(() => {
+                        addTerminalLine(step.message, step.type);
+                        if (step.message.includes("Сбор информации завершен")) {
+                            showResultModal("Сбор информации завершен!<br>Найдены все основные данные цели.", "success");
+                        }
+                    }, step.delay);
+                });
+            });
+            
+            // Start Anonymization
+            document.getElementById('startAnonymization').addEventListener('click', function() {
+                addTerminalLine("> Активация системы анонимизации...", "info");
+                
+                const anonSteps = [
+                    {delay: 1000, message: "> Подключение к сети Tor...", type: "info"},
+                    {delay: 2000, message: "> ✓ Цепочка из 5 узлов установлена", type: "success"},
+                    {delay: 3000, message: "> Шифрование каналов связи...", type: "info"},
+                    {delay: 4000, message: "> ✓ AES-256 активировано", type: "success"},
+                    {delay: 5000, message: "> Очистка логов...", type: "info"},
+                    {delay: 6000, message: "> ✓ Логи удалены", type: "success"},
+                    {delay: 7000, message: "> Система анонимизации активна", type: "success"}
+                ];
+                
+                anonSteps.forEach(step => {
+                    setTimeout(() => {
+                        addTerminalLine(step.message, step.type);
+                        if (step.message.includes("Система анонимизации активна")) {
+                            showResultModal("Анонимизация активирована!<br>Все действия теперь полностью скрыты.", "success");
+                        }
+                    }, step.delay);
+                });
+            });
+            
+            // Operation tab buttons
+            document.getElementById('inviteDoxers').addEventListener('click', function() {
+                addTerminalLine("> Отправка приглашений доксерам...", "info");
+                setTimeout(() => {
+                    addTerminalLine("> ✓ Приглашения отправлены 15 доксерам", "success");
+                    showResultModal("Приглашения отправлены!<br>15 доксеров получили уведомление.", "success");
+                }, 2000);
+            });
+            
+            document.getElementById('generateReport').addEventListener('click', function() {
+                addTerminalLine("> Генерация отчета операции...", "info");
+                setTimeout(() => {
+                    addTerminalLine("> ✓ Отчет сгенерирован и сохранен", "success");
+                    showResultModal("Отчет сгенерирован!<br>Файл: operation_vasilina_report.pdf", "success");
+                }, 3000);
+            });
+            
+            document.getElementById('escalateAttack').addEventListener('click', function() {
+                addTerminalLine("> Эскалация атаки...", "warning");
+                setTimeout(() => {
+                    addTerminalLine("> ✓ Атака переведена на уровень 2", "success");
+                    showResultModal("Атака эскалирована!<br>Активированы расширенные методы.", "success");
+                }, 2000);
+            });
+            
+            // Profile tab buttons
+            document.getElementById('addBalance').addEventListener('click', function() {
+                const amount = 1000; // BTC
+                userBalance += amount;
+                userBalanceElement.textContent = userBalance.toLocaleString();
+                
+                addTerminalLine(`> Баланс пополнен на ${amount} BTC`, "success");
+                addTerminalLine(`> Новый баланс: ${userBalance} BTC`, "info");
+                showResultModal(`Баланс пополнен!<br>Добавлено: ${amount} BTC<br>Новый баланс: ${userBalance} BTC`, "success");
+            });
+            
+            document.getElementById('viewHistory').addEventListener('click', function() {
+                addTerminalLine("> Загрузка истории операций...", "info");
+                setTimeout(() => {
+                    addTerminalLine("> ✓ История загружена (15 операций)", "success");
+                    showResultModal("История операций:<br>• Покупка SMS Bomber Pro<br>• Использование IP Tracker<br>• Bomber атака<br>и еще 12 операций", "success");
+                }, 2000);
+            });
+            
+            document.getElementById('securitySettings').addEventListener('click', function() {
+                addTerminalLine("> Открытие настроек безопасности...", "info");
+                showResultModal("Настройки безопасности:<br>• 2FA: Включено<br>• Шифрование: AES-256<br>• Автологин: Отключено<br>• Логирование: Отключено", "success");
+            });
+            
+            // Initialize stats animation
+            function animateStats() {
+                const stats = [
+                    {element: document.getElementById('participants'), target: 47},
+                    {element: document.getElementById('tools-active'), target: "8/12"},
+                    {element: document.getElementById('data-collected'), target: "64%"},
+                    {element: document.getElementById('success-chance'), target: "92%"}
+                ];
+                
+                stats.forEach(stat => {
+                    if (typeof stat.target === 'number') {
+                        let current = 0;
+                        const interval = setInterval(() => {
+                            current++;
+                            stat.element.textContent = current;
+                            if (current >= stat.target) clearInterval(interval);
+                        }, 30);
+                    } else {
+                        stat.element.textContent = stat.target;
+                    }
+                });
+            }
+            
+            // Animate stats after a delay
+            setTimeout(animateStats, 1000);
+            
+            // Initialize shop and tools
+            loadShopProducts();
+            loadTools();
+        });
+    </script>
+</body>
+</html>
